@@ -1,13 +1,27 @@
+// The wasm-pack uses wasm-bindgen to build and generate JavaScript binding file.
+// Import the wasm-bindgen crate.
+use wasm_bindgen::prelude::*;
+
+// Our Add function
+// wasm-pack requires "exported" functions
+// to include #[wasm_bindgen]
+#[wasm_bindgen]
+pub fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
 use std::collections::HashMap;
 
 #[derive(Default, Debug, Clone)]
-struct Node {
-    childs: HashMap<char, Node>,
-    is_terminal: bool,
+#[wasm_bindgen]
+pub struct Node {
+    pub childs: HashMap<char, Node>,
+    pub is_terminal: bool,
 }
 
+#[wasm_bindgen]
 impl Node {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             childs: HashMap::default(),
             is_terminal: false,
@@ -86,17 +100,19 @@ impl Node {
     }
 }
 
+#[wasm_bindgen]
 #[derive(Default, Debug, Clone)]
-struct Trie {
-    root: Node,
+pub struct Trie {
+    pub root: Node,
 }
 
+#[wasm_bindgen]
 impl Trie {
-    fn new(root: Node) -> Self {
+    pub fn new(root: Node) -> Self {
         Self { root }
     }
 
-    fn insert(&mut self, word: &str) {
+    pub fn insert(&mut self, word: &str) {
         let mut head = &mut self.root;
 
         for c in word.chars() {
@@ -156,45 +172,45 @@ impl Trie {
     }
 }
 
-fn main() {
-    let mut t = Trie::new(Node::default());
+// fn main() {
+//     let mut t = Trie::new(Node::default());
 
-    t.insert("data");
-    t.insert("database");
-    t.insert("databaseware");
-    t.insert("databasewarehouse");
-    t.insert("databasehouse");
-    t.insert("datahouse");
-    t.insert("string");
+//     t.insert("data");
+//     t.insert("database");
+//     t.insert("databaseware");
+//     t.insert("databasewarehouse");
+//     t.insert("databasehouse");
+//     t.insert("datahouse");
+//     t.insert("string");
 
-    // println!("{t:#?}");
+//     // println!("{t:#?}");
 
-    let q = "databaseware";
-    let r = t.auto_complete(q);
+//     let q = "databaseware";
+//     let r = t.auto_complete(q);
 
-    println!("{q} autocomplete is {r:?}");
+//     println!("{q} autocomplete is {r:?}");
 
-    let r = t.traverse();
-    println!("before droppeed recursive traverse {r:?}");
+//     let r = t.traverse();
+//     println!("before droppeed recursive traverse {r:?}");
 
-    let droped = t.delete("databasehouse");
-    println!("databasehouse got droped {droped:?}");
+//     let droped = t.delete("databasehouse");
+//     println!("databasehouse got droped {droped:?}");
 
-    let r = t.traverse();
-    println!("after droped recursive traverse {r:?}");
+//     let r = t.traverse();
+//     println!("after droped recursive traverse {r:?}");
 
-    let m = t.search("database");
-    println!("database {m:?}");
+//     let m = t.search("database");
+//     println!("database {m:?}");
 
-    let m = t.start_with("dat".chars());
-    println!("start with \"dat\" {m:?}");
+//     let m = t.start_with("dat".chars());
+//     println!("start with \"dat\" {m:?}");
 
-    let m = t.start_with("dala".chars());
-    println!("start with \"dala\" {m:?}");
+//     let m = t.start_with("dala".chars());
+//     println!("start with \"dala\" {m:?}");
 
-    let r = t.traverse();
-    println!("recursive traverse {r:?}");
+//     let r = t.traverse();
+//     println!("recursive traverse {r:?}");
 
-    let r = t.traverse_with_stack();
-    println!("traverse_with_stack {r:?}");
-}
+//     let r = t.traverse_with_stack();
+//     println!("traverse_with_stack {r:?}");
+// }
